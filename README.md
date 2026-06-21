@@ -26,6 +26,34 @@ The project includes a comprehensive bash script to manage the lifecycle of the 
 
 **Prerequisites:** GCC compiler, OpenSSL (`libcrypto`), and a Linux environment.
 
-1. **Initialize directory structure:**
-   ```bash
-   ./tools/fileops.sh init
+### 1. Initialize Workspace
+Create the standard project directory layout (`bin`, `src`, `include`, `data`, `logs`, etc.) and verify that the GCC compiler is available:
+```bash
+./tools/fileops.sh init
+```
+
+### 2. Compile the Project
+Automatically find all module files and entry points (`main_*.c`), compile source objects under `tmp/obj/`, and link the final executables into `bin/`:
+```bash
+./tools/fileops.sh build
+```
+*Note: You can override the source folder using `./tools/fileops.sh build --src <custom_folder>`.*
+
+### 3. Run the Application
+Execute any compiled binary from the `bin/` directory safely by passing the separator `--` followed by the application's mandatory flags:
+```bash
+# Example: Running the manager with 4 worker processes to index a directory
+./tools/fileops.sh run -- fileops_manager --root /path/to/scan --workers 4 --ipc data/ipc.mmap --db data/inventory.db
+```
+
+### 4. Run Automated Tests
+Trigger the automated testing framework. It scans the `tests/` directory recursively, runs all script components, and outputs an execution pass/fail report to `reports/T2_tests.txt`:
+```bash
+./tools/fileops.sh test
+```
+
+### 5. Clean Build Artifacts
+Wipe out all temporary object files (`.o`) and compiled binaries from the workspace to enforce a fresh re-build:
+```bash
+./tools/fileops.sh clean
+```
