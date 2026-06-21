@@ -5,12 +5,12 @@ This system programming project implements a high-performance, concurrent file s
 
 ## Key Features
 * **Manager-Worker Architecture:** The system uses `fork()` and `exec()` to distribute directory scanning jobs across multiple worker processes.
-* **Advanced IPC (Inter-Process Communication):** * Uses a shared memory map (`mmap` with `MAP_SHARED`) to maintain a circular job queue and result channels.
-  * Synchronizes access using POSIX Semaphores (`sem_empty`, `sem_full`, `sem_mutex`) to handle backpressure and prevent data races.
-  * Utilizes asynchronous anonymous pipes (set to `O_NONBLOCK`) for a control plane, allowing workers to send atomic text messages to the manager.
+* **Advanced IPC:**  Uses a shared memory map to maintain a circular job queue and result channels.
+  * Synchronizes access using POSIX Semaphores to handle backpressure and prevent data races.
+  * Utilizes asynchronous anonymous pipes for a control plane, allowing workers to send atomic text messages to the manager.
 * **File Metadata & Hashing:** Extracts detailed metadata (size, permissions, uid, gid, mtime) using `lstat` and calculates the SHA256 hash for regular files using OpenSSL.
-* **Custom Binary Database:** Writes results atomically to a `.db` file using a structured binary format (`DBHeader`, `FileRecord`, `WorkerStats`).
-* **Robust Signal Handling:** Implements graceful shutdown procedures capturing `SIGINT` and `SIGTERM`, safely terminating workers, and saving a partial database state (`DB_PART_COMPLETE`). Generates real-time execution stats upon receiving `SIGUSR1`.
+* **Custom Binary Database:** Writes results atomically to a `.db` file using a structured binary format.
+* **Robust Signal Handling:** Implements graceful shutdown procedures capturing `SIGINT` and `SIGTERM`, safely terminating workers, and saving a partial database state. Generates real-time execution stats upon receiving `SIGUSR1`.
 
 ## Repository Structure
 * `/src` - Source code for the manager, workers, and ring buffer implementations.
